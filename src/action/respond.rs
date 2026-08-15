@@ -14,5 +14,4 @@ pub(super) struct GetTokenQuery {
 pub(super) struct GetTokenTokens {
     pub(super) csrftoken: Option<String>,
     pub(super) logintoken: Option<String>,
-    pub(crate) csfrtoken: (),
 }
