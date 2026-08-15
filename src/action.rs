@@ -1,10 +1,16 @@
 mod body;
 mod error;
+pub mod params;
 mod respond;
-use reqwest::Client;
+use crate::{
+    action::params::{EditParams, LoginParams},
+    wiki_client::WikiClient,
+};
 use respond::GetTokenResponse;
 
-pub async fn get_csrf_token(client: &Client, site: &str) -> String {
+pub async fn get_csrf_token(wiki_client: &WikiClient) -> String {
+    let client = wiki_client.client();
+    let site = wiki_client.site();
     let url = format!("https://{site}.huijiwiki.com/api.php?action=query&meta=tokens&format=json");
     let response = client
         .get(url)
@@ -17,7 +23,9 @@ pub async fn get_csrf_token(client: &Client, site: &str) -> String {
     response.query.tokens.csrftoken.unwrap()
 }
 
-pub async fn get_login_token(client: &Client, site: &str) -> String {
+pub async fn get_login_token(wiki_client: &WikiClient) -> String {
+    let client = wiki_client.client();
+    let site = wiki_client.site();
     let url = format!(
         "https://{site}.huijiwiki.com/api.php?action=query&meta=tokens&type=login&format=json"
     );
@@ -32,15 +40,10 @@ pub async fn get_login_token(client: &Client, site: &str) -> String {
     response.query.tokens.logintoken.unwrap()
 }
 
-pub async fn login(
-    client: &Client,
-    site: &str,
-    login_token: &str,
-    username: &str,
-    password: &str,
-    login_return_url: &str,
-) {
-    let body = body::login_body(login_token, username, password, login_return_url);
+pub async fn login(wiki_client: &WikiClient, params: LoginParams) {
+    let client = wiki_client.client();
+    let site = wiki_client.site();
+    let body = body::login_body(params, site);
     let url = format!("https://{site}.huijiwiki.com/api.php");
     let _response = client
         .post(url)
@@ -53,16 +56,11 @@ pub async fn login(
         .unwrap();
 }
 
-pub async fn edit(
-    client: &Client,
-    site: &str,
-    csrf_token: &str,
-    title: &str,
-    text: &str,
-    summary: &str,
-) {
+pub async fn edit(wiki_client: &WikiClient, params: EditParams) {
+    let client = wiki_client.client();
+    let site = wiki_client.site();
+    let body = body::edit_body(params);
     let url = format!("https://{site}.huijiwiki.com/api.php");
-    let body = body::edit_body(csrf_token, title, text, summary);
     let _response = client
         .post(url)
         .multipart(body)

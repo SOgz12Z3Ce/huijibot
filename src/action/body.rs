@@ -1,26 +1,28 @@
 use reqwest::multipart::Form;
 
-pub(super) fn login_body(
-    login_token: &str,
-    username: &str,
-    password: &str,
-    login_return_url: &str,
-) -> Form {
+use crate::action::params::{EditParams, LoginParams};
+
+pub(super) fn login_body(params: LoginParams, site: &str) -> Form {
     Form::new()
         .text("action", "clientlogin")
-        .text("logintoken", login_token.to_owned())
-        .text("username", username.to_owned())
-        .text("password", password.to_owned())
-        .text("loginreturnurl", login_return_url.to_owned())
+        .text("logintoken", params.login_token)
+        .text("username", params.username)
+        .text("password", params.password)
+        .text("loginreturnurl", format!("https://{site}.huijiwiki.com/"))
         .text("format", "json")
 }
 
-pub(super) fn edit_body(csrf_token: &str, title: &str, text: &str, summary: &str) -> Form {
-    Form::new()
+pub(super) fn edit_body(params: EditParams) -> Form {
+    let body = Form::new()
         .text("action", "edit")
-        .text("title", title.to_owned())
-        .text("summary", summary.to_owned())
-        .text("text", text.to_owned())
-        .text("token", csrf_token.to_owned())
-        .text("format", "json")
+        .text("title", params.title)
+        .text("summary", params.summary)
+        .text("text", params.text)
+        .text("token", params.csrf_token)
+        .text("format", "json");
+    if params.bot {
+        body.text("bot", "1")
+    } else {
+        body
+    }
 }
