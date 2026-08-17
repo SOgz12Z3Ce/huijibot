@@ -1,6 +1,5 @@
 mod body;
-mod error;
-pub mod params;
+pub(crate) mod params;
 mod respond;
 use crate::{
     action::params::{EditParams, LoginParams},
@@ -8,7 +7,7 @@ use crate::{
 };
 use respond::GetTokenResponse;
 
-pub async fn get_csrf_token(wiki_client: &WikiClient) -> String {
+pub(crate) async fn get_csrf_token(wiki_client: &WikiClient) -> String {
     let client = wiki_client.client();
     let site = wiki_client.site();
     let url = format!("https://{site}.huijiwiki.com/api.php?action=query&meta=tokens&format=json");
@@ -23,7 +22,7 @@ pub async fn get_csrf_token(wiki_client: &WikiClient) -> String {
     response.query.tokens.csrftoken.unwrap()
 }
 
-pub async fn get_login_token(wiki_client: &WikiClient) -> String {
+pub(crate) async fn get_login_token(wiki_client: &WikiClient) -> String {
     let client = wiki_client.client();
     let site = wiki_client.site();
     let url = format!(
@@ -40,7 +39,7 @@ pub async fn get_login_token(wiki_client: &WikiClient) -> String {
     response.query.tokens.logintoken.unwrap()
 }
 
-pub async fn login(wiki_client: &WikiClient, params: LoginParams) {
+pub(crate) async fn login(wiki_client: &WikiClient, params: LoginParams) {
     let client = wiki_client.client();
     let site = wiki_client.site();
     let body = body::login_body(params, site);
@@ -56,7 +55,7 @@ pub async fn login(wiki_client: &WikiClient, params: LoginParams) {
         .unwrap();
 }
 
-pub async fn edit(wiki_client: &WikiClient, params: EditParams) {
+pub(crate) async fn edit(wiki_client: &WikiClient, params: EditParams) {
     let client = wiki_client.client();
     let site = wiki_client.site();
     let body = body::edit_body(params);

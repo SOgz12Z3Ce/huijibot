@@ -1,12 +1,12 @@
 use reqwest::Client;
 
-pub struct WikiClient {
+pub(crate) struct WikiClient {
     client: Client,
     site: String,
 }
 
 impl WikiClient {
-    pub fn new(site: String) -> Self {
+    pub(crate) fn new(site: String) -> Self {
         Self {
             client: Client::builder()
                 .tls_sslkeylogfile(cfg!(debug_assertions))

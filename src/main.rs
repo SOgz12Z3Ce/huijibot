@@ -2,5 +2,5 @@ use huijibot;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    huijibot::cli().await
+    huijibot::run().await
 }

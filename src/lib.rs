@@ -3,4 +3,4 @@ mod cli;
 mod wiki;
 mod wiki_client;
 
-pub use cli::cli;
+pub use cli::run;

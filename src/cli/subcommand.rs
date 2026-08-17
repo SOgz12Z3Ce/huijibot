@@ -9,12 +9,12 @@ use std::path::PathBuf;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
 
-pub(super) fn init(path: PathBuf) -> Result<(), std::io::Error> {
+pub(crate) fn init(path: PathBuf) -> Result<(), std::io::Error> {
     let huijibot_path = path.join(".huijibot");
     fs::create_dir(huijibot_path)
 }
 
-pub(super) async fn push(paths: Vec<PathBuf>, _worker: u8, _gap: u8) -> Result<(), std::io::Error> {
+pub(crate) async fn push(paths: Vec<PathBuf>, _worker: u8, _gap: u8) -> Result<(), std::io::Error> {
     let root_path = metadata::root_path();
     let files = collect_files(paths);
     for file in files {
@@ -49,7 +49,7 @@ fn collect_files(paths: Vec<PathBuf>) -> Vec<PathBuf> {
     files
 }
 
-pub(super) fn config(patch: HuijibotConfig) -> Result<(), Box<dyn std::error::Error>> {
+pub(crate) fn config(patch: HuijibotConfig) -> Result<(), Box<dyn std::error::Error>> {
     let config_path = metadata::config_path();
     let mut config = metadata::config();
     if let Some(site) = patch.site {

@@ -8,7 +8,7 @@ use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(version = "0.1")]
-pub struct Cli {
+struct Cli {
     #[command(subcommand)]
     command: Commands,
 
@@ -37,7 +37,7 @@ enum Commands {
     },
 }
 
-pub async fn cli() -> Result<(), Box<dyn std::error::Error>> {
+pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
     match cli.command {
         Commands::Init { path } => {

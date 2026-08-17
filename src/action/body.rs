@@ -2,7 +2,7 @@ use reqwest::multipart::Form;
 
 use crate::action::params::{EditParams, LoginParams};
 
-pub(super) fn login_body(params: LoginParams, site: &str) -> Form {
+pub(crate) fn login_body(params: LoginParams, site: &str) -> Form {
     Form::new()
         .text("action", "clientlogin")
         .text("logintoken", params.login_token)
@@ -12,7 +12,7 @@ pub(super) fn login_body(params: LoginParams, site: &str) -> Form {
         .text("format", "json")
 }
 
-pub(super) fn edit_body(params: EditParams) -> Form {
+pub(crate) fn edit_body(params: EditParams) -> Form {
     let body = Form::new()
         .text("action", "edit")
         .text("title", params.title)

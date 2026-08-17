@@ -1,16 +1,16 @@
-pub struct LoginParams {
+pub(crate) struct LoginParams {
     pub(crate) login_token: String,
     pub(crate) username: String,
     pub(crate) password: String,
 }
 
 impl LoginParams {
-    pub fn builder() -> LoginParamsBuilder {
+    pub(crate) fn builder() -> LoginParamsBuilder {
         LoginParamsBuilder::new()
     }
 }
 
-pub struct LoginParamsBuilder {
+pub(crate) struct LoginParamsBuilder {
     login_token: Option<String>,
     username: Option<String>,
     password: Option<String>,
@@ -25,7 +25,7 @@ impl LoginParamsBuilder {
         }
     }
 
-    pub fn build(self) -> LoginParams {
+    pub(crate) fn build(self) -> LoginParams {
         LoginParams {
             login_token: self.login_token.unwrap(),
             username: self.username.unwrap(),
@@ -33,23 +33,23 @@ impl LoginParamsBuilder {
         }
     }
 
-    pub fn login_token(mut self, login_token: String) -> Self {
+    pub(crate) fn login_token(mut self, login_token: String) -> Self {
         self.login_token = Some(login_token);
         self
     }
 
-    pub fn username(mut self, username: String) -> Self {
+    pub(crate) fn username(mut self, username: String) -> Self {
         self.username = Some(username);
         self
     }
 
-    pub fn password(mut self, password: String) -> Self {
+    pub(crate) fn password(mut self, password: String) -> Self {
         self.password = Some(password);
         self
     }
 }
 
-pub struct EditParams {
+pub(crate) struct EditParams {
     pub(crate) csrf_token: String,
     pub(crate) title: String,
     pub(crate) text: String,
@@ -58,12 +58,12 @@ pub struct EditParams {
 }
 
 impl EditParams {
-    pub fn builder() -> EditParamsBuilder {
+    pub(crate) fn builder() -> EditParamsBuilder {
         EditParamsBuilder::new()
     }
 }
 
-pub struct EditParamsBuilder {
+pub(crate) struct EditParamsBuilder {
     csrf_token: Option<String>,
     title: Option<String>,
     text: Option<String>,
@@ -82,7 +82,7 @@ impl EditParamsBuilder {
         }
     }
 
-    pub fn build(self) -> EditParams {
+    pub(crate) fn build(self) -> EditParams {
         EditParams {
             csrf_token: self.csrf_token.unwrap(),
             title: self.title.unwrap(),
@@ -92,27 +92,27 @@ impl EditParamsBuilder {
         }
     }
 
-    pub fn csrf_token(mut self, csrf_token: String) -> Self {
+    pub(crate) fn csrf_token(mut self, csrf_token: String) -> Self {
         self.csrf_token = Some(csrf_token);
         self
     }
 
-    pub fn title(mut self, title: String) -> Self {
+    pub(crate) fn title(mut self, title: String) -> Self {
         self.title = Some(title);
         self
     }
 
-    pub fn text(mut self, text: String) -> Self {
+    pub(crate) fn text(mut self, text: String) -> Self {
         self.text = Some(text);
         self
     }
 
-    pub fn summary(mut self, summary: String) -> Self {
+    pub(crate) fn summary(mut self, summary: String) -> Self {
         self.summary = Some(summary);
         self
     }
 
-    pub fn bot(mut self, bot: bool) -> Self {
+    pub(crate) fn bot(mut self, bot: bool) -> Self {
         self.bot = Some(bot);
         self
     }

@@ -1,17 +1,17 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub(super) struct GetTokenResponse {
-    pub(super) query: GetTokenQuery,
+pub(crate) struct GetTokenResponse {
+    pub(crate) query: GetTokenQuery,
 }
 
 #[derive(Debug, Deserialize)]
-pub(super) struct GetTokenQuery {
-    pub(super) tokens: GetTokenTokens,
+pub(crate) struct GetTokenQuery {
+    pub(crate) tokens: GetTokenTokens,
 }
 
 #[derive(Debug, Deserialize)]
-pub(super) struct GetTokenTokens {
-    pub(super) csrftoken: Option<String>,
-    pub(super) logintoken: Option<String>,
+pub(crate) struct GetTokenTokens {
+    pub(crate) csrftoken: Option<String>,
+    pub(crate) logintoken: Option<String>,
 }
