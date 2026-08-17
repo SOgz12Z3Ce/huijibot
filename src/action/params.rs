@@ -112,8 +112,8 @@ impl EditParamsBuilder {
         self
     }
 
-    pub fn bot(mut self, robot: bool) -> Self {
-        self.bot = Some(robot);
+    pub fn bot(mut self, bot: bool) -> Self {
+        self.bot = Some(bot);
         self
     }
 }
