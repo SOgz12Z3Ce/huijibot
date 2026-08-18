@@ -67,7 +67,7 @@ pub(crate) async fn push(
         wiki_client.site()
     );
     println!("Username: {}", config.username.as_ref().unwrap());
-    println!("Password: {}", config.password.as_ref().unwrap());
+    println!("Password: [hidden]");
     if !dry {
         let login_token = action::get_login_token(&wiki_client).await;
         action::login(
