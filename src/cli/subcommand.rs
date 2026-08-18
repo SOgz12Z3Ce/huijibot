@@ -95,7 +95,7 @@ pub(crate) async fn push(
             let summary = summary.clone();
             async move {
                 let debug_title = title.clone();
-                println!("Start edit: {debug_title}");
+                println!("Editing: {debug_title}");
                 if !dry {
                     edit(wiki_client, title, text, summary).await;
                 }
