@@ -1,5 +1,6 @@
 use std::{fmt::Display, path::Path};
 
+#[derive(Clone)]
 pub(crate) struct Title {
     namespace: Option<String>,
     name: String,

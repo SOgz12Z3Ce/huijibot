@@ -5,6 +5,7 @@ use crate::cli::metadata::HuijibotConfig;
 use clap::Parser;
 use clap::Subcommand;
 use std::path::PathBuf;
+use std::time::Duration;
 
 #[derive(Parser)]
 #[command(version = "0.1")]
@@ -30,23 +31,45 @@ enum Commands {
         paths: Vec<PathBuf>,
 
         #[arg(short, long, default_value_t = 1)]
-        worker: u8,
+        worker: usize,
 
         #[arg(short, long, default_value_t = 5)]
-        gap: u8,
+        duration: usize,
+
+        #[arg(short, long, default_value = "")]
+        summary: String,
     },
 }
 
 pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
+    if cfg!(feature = "peek") {
+        return Ok(());
+    }
     let cli = Cli::parse();
+    let dry = cli.dry;
     match cli.command {
         Commands::Init { path } => {
-            subcommand::init(path)?;
+            subcommand::init(dry, path)?;
         }
-        Commands::Config { config } => subcommand::config(config)?,
-        Commands::Push { paths, worker, gap } => {
-            subcommand::push(paths, worker, gap).await?;
+        Commands::Config { config } => subcommand::config(dry, config)?,
+        Commands::Push {
+            paths,
+            worker,
+            duration,
+            summary,
+        } => {
+            subcommand::push(
+                dry,
+                paths,
+                worker,
+                Duration::from_secs(duration.try_into()?),
+                summary,
+            )
+            .await?;
         }
+    }
+    if dry {
+        println!("Aborting due to dry run");
     }
     Ok(())
 }
