@@ -26,7 +26,11 @@ pub(crate) fn init(dry: bool, path: PathBuf) -> Result<(), std::io::Error> {
 pub(crate) fn config(dry: bool, patch: HuijibotConfig) -> Result<(), Box<dyn std::error::Error>> {
     println!("Finding config");
     let config_path = metadata::config_path();
-    println!("Config found at: {}", config_path.display());
+    if config_path.exists() {
+        println!("Config found at: {}", config_path.display());
+    } else {
+        println!("Config doesn't exist. Creating");
+    }
     let mut config = metadata::config();
     if let Some(site) = patch.site {
         config.site = Some(site);

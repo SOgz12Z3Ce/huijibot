@@ -42,6 +42,10 @@ pub(crate) fn config_path() -> PathBuf {
 
 pub(crate) fn config() -> HuijibotConfig {
     let config_path = config_path();
-    let content = fs::read_to_string(config_path).unwrap();
-    toml::from_str(&content).unwrap()
+    if config_path.exists() {
+        let content = fs::read_to_string(config_path).unwrap();
+        toml::from_str(&content).unwrap()
+    } else {
+        toml::from_str("").unwrap()
+    }
 }
