@@ -9,12 +9,7 @@ pub(crate) struct Title {
 impl Title {
     pub(crate) fn new<P: AsRef<Path>>(file: P) -> Self {
         let path = file.as_ref();
-        let name = path
-            .file_stem()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .replace("\\", "/");
+        let name = path.with_extension("").to_str().unwrap().replace("\\", "/");
         let extension = path.extension().unwrap().to_str().unwrap();
         match extension {
             "lua" => Self {
