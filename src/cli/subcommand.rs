@@ -31,7 +31,7 @@ pub(crate) fn config(dry: bool, patch: HuijibotConfig) -> Result<(), Box<dyn std
         println!("Config doesn't exist. Creating");
     }
     let config = {
-        let mut config = metadata::config();  
+        let mut config = metadata::config();
         config.site = config.site.or(patch.site);
         config.username = config.username.or(patch.username);
         config.password = config.password.or(patch.password);
@@ -90,7 +90,14 @@ pub(crate) async fn push(
         println!("{}", file.display());
     }
 
-    for chuck in files.chunks(worker) {
+    for (i, chuck) in files.chunks(worker).enumerate() {
+        if i != 0 {
+            println!("Wait for {}s now...", duration.as_secs());
+            if !dry {
+                time::sleep(duration).await;
+            }
+        }
+
         let tasks = chuck.iter().map(|file| {
             let file_path = fs::canonicalize(&file).unwrap();
             let relative_path = pathdiff::diff_paths(file_path, &root_path).unwrap();
@@ -109,10 +116,6 @@ pub(crate) async fn push(
             }
         });
         future::join_all(tasks).await;
-        println!("Wait for {}s now...", duration.as_secs());
-        if !dry {
-            time::sleep(duration).await;
-        }
     }
     Ok(())
 }
