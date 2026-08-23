@@ -1,6 +1,7 @@
 mod body;
 pub(crate) mod params;
 mod respond;
+
 use crate::{
     action::params::{EditParams, LoginParams},
     wiki_client::WikiClient,

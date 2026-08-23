@@ -1,7 +1,8 @@
-use reqwest::Client;
-use reqwest::cookie::Jar;
-use reqwest::header::HeaderMap;
-use reqwest::header::HeaderValue;
+use reqwest::{
+    Client,
+    cookie::Jar,
+    header::{HeaderMap, HeaderValue},
+};
 use std::sync::Arc;
 
 #[derive(Clone)]

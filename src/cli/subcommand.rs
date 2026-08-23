@@ -1,18 +1,17 @@
-use crate::action;
-use crate::action::params::EditParams;
-use crate::action::params::LoginParams;
-use crate::cli::metadata::{self, HuijibotConfig};
-use crate::wiki::Title;
-use crate::wiki_client::WikiClient;
+use crate::{
+    action::{
+        self,
+        params::{EditParams, LoginParams},
+    },
+    cli::metadata::{self, HuijibotConfig},
+    wiki::Title,
+    wiki_client::WikiClient,
+};
 use futures::future;
 use reqwest::cookie::Jar;
-use std::fs;
-use std::path::PathBuf;
-use std::sync::Arc;
-use std::time::Duration;
+use std::{fs, path::PathBuf, sync::Arc, time::Duration};
 use tokio::time;
-use walkdir::DirEntry;
-use walkdir::WalkDir;
+use walkdir::{DirEntry, WalkDir};
 
 pub(crate) fn init(dry: bool, path: PathBuf) -> Result<(), std::io::Error> {
     let huijibot_path = path.join(".huijibot");

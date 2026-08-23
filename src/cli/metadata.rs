@@ -1,10 +1,6 @@
-use std::env;
-use std::fs;
-use std::path::PathBuf;
-
 use clap::Args;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use std::{env, fs, path::PathBuf};
 
 pub(crate) fn root_path() -> PathBuf {
     let mut cur_path = fs::canonicalize(env::current_dir().unwrap()).unwrap();

@@ -2,10 +2,8 @@ mod metadata;
 mod subcommand;
 
 use crate::cli::metadata::HuijibotConfig;
-use clap::Parser;
-use clap::Subcommand;
-use std::path::PathBuf;
-use std::time::Duration;
+use clap::{Parser, Subcommand};
+use std::{path::PathBuf, time::Duration};
 
 #[derive(Parser)]
 #[command(version = "0.1")]

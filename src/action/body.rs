@@ -1,6 +1,5 @@
-use reqwest::multipart::Form;
-
 use crate::action::params::{EditParams, LoginParams};
+use reqwest::multipart::Form;
 
 pub(crate) fn login_body(params: LoginParams, site: &str) -> Form {
     Form::new()
