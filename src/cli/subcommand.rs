@@ -40,6 +40,9 @@ pub(crate) fn config(dry: bool, patch: HuijibotConfig) -> Result<(), Box<dyn std
     if let Some(password) = patch.password {
         config.password = Some(password);
     }
+    if let Some(auth_key) = patch.auth_key {
+        config.auth_key = Some(auth_key);
+    }
 
     let content = toml::to_string_pretty(&config)?;
     println!("Writing config:");
@@ -55,6 +58,7 @@ pub(crate) async fn push(
     paths: Vec<PathBuf>,
     worker: usize,
     duration: Duration,
+    namespace: Option<String>,
     summary: String,
 ) -> Result<(), std::io::Error> {
     let config = metadata::config();
@@ -95,7 +99,7 @@ pub(crate) async fn push(
         let tasks = chuck.iter().map(|file| {
             let file_path = fs::canonicalize(&file).unwrap();
             let relative_path = pathdiff::diff_paths(file_path, &root_path).unwrap();
-            let title = Title::new(relative_path);
+            let title = Title::new(relative_path).with_namespace(namespace.clone());
             let text = fs::read_to_string(file).unwrap();
 
             let wiki_client = wiki_client.clone();

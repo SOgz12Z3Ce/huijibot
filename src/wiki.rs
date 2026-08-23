@@ -23,6 +23,13 @@ impl Title {
             _ => todo!(),
         }
     }
+
+    pub(crate) fn with_namespace(self, namespace: Option<String>) -> Self {
+        Self {
+            namespace: namespace,
+            ..self
+        }
+    }
 }
 
 impl Display for Title {

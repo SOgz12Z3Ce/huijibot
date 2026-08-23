@@ -34,6 +34,9 @@ enum Commands {
         #[arg(short, long, default_value_t = 5)]
         duration: usize,
 
+        #[arg(short, long)]
+        namespace: Option<String>,
+
         #[arg(short, long, default_value = "")]
         summary: String,
     },
@@ -54,6 +57,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
             paths,
             worker,
             duration,
+            namespace,
             summary,
         } => {
             subcommand::push(
@@ -61,6 +65,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
                 paths,
                 worker,
                 Duration::from_secs(duration.try_into()?),
+                namespace,
                 summary,
             )
             .await?;
