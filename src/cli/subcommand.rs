@@ -30,19 +30,14 @@ pub(crate) fn config(dry: bool, patch: HuijibotConfig) -> Result<(), Box<dyn std
     } else {
         println!("Config doesn't exist. Creating");
     }
-    let mut config = metadata::config();
-    if let Some(site) = patch.site {
-        config.site = Some(site);
-    }
-    if let Some(username) = patch.username {
-        config.username = Some(username);
-    }
-    if let Some(password) = patch.password {
-        config.password = Some(password);
-    }
-    if let Some(auth_key) = patch.auth_key {
-        config.auth_key = Some(auth_key);
-    }
+    let config = {
+        let mut config = metadata::config();  
+        config.site = config.site.or(patch.site);
+        config.username = config.username.or(patch.username);
+        config.password = config.password.or(patch.password);
+        config.auth_key = config.auth_key.or(patch.auth_key);
+        config
+    };
 
     let content = toml::to_string_pretty(&config)?;
     println!("Writing config:");
