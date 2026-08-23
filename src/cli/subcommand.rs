@@ -60,7 +60,11 @@ pub(crate) async fn push(
 ) -> Result<(), std::io::Error> {
     let config = metadata::config();
     let jar = Arc::new(Jar::default());
-    let wiki_client = WikiClient::new(Arc::clone(&jar), config.site.unwrap());
+    let wiki_client = WikiClient::new(
+        Arc::clone(&jar),
+        config.site.unwrap(),
+        &config.auth_key.unwrap(),
+    );
 
     println!(
         "Logging in {}.huijiwiki.com with account:",

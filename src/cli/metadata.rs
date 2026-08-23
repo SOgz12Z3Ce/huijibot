@@ -34,6 +34,9 @@ pub(crate) struct HuijibotConfig {
 
     #[arg(short, long)]
     pub(crate) password: Option<String>,
+
+    #[arg(short, long)]
+    pub(crate) auth_key: Option<String>,
 }
 
 pub(crate) fn config_path() -> PathBuf {
