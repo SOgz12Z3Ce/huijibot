@@ -4,7 +4,7 @@ use crate::{
         params::{EditParams, LoginParams},
     },
     cli::metadata::{self, HuijibotConfig},
-    wiki::Title,
+    wiki::{Namespace, Title},
     wiki_client::WikiClient,
 };
 use futures::future;
@@ -53,7 +53,7 @@ pub(crate) async fn push(
     paths: Vec<PathBuf>,
     worker: usize,
     duration: Duration,
-    namespace: Option<String>,
+    namespace: Option<Namespace>,
     summary: String,
 ) -> Result<(), std::io::Error> {
     let config = metadata::config();
@@ -101,7 +101,11 @@ pub(crate) async fn push(
         let tasks = chuck.iter().map(|file| {
             let file_path = fs::canonicalize(&file).unwrap();
             let relative_path = pathdiff::diff_paths(file_path, &root_path).unwrap();
-            let title = Title::new(relative_path).with_namespace(namespace.clone());
+            let title = Title::new(relative_path);
+            let title = match namespace {
+                Some(namespace) => title.with_namespace(namespace),
+                None => title,
+            };
             let text = fs::read_to_string(file).unwrap();
 
             let wiki_client = wiki_client.clone();

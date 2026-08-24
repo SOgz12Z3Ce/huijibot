@@ -1,7 +1,7 @@
 mod metadata;
 mod subcommand;
 
-use crate::cli::metadata::HuijibotConfig;
+use crate::{cli::metadata::HuijibotConfig, wiki::Namespace};
 use clap::{Parser, Subcommand};
 use std::{path::PathBuf, time::Duration};
 
@@ -65,7 +65,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
                 paths,
                 worker,
                 Duration::from_secs(duration.try_into()?),
-                namespace,
+                namespace.and_then(|ns| Some(ns.parse::<Namespace>().unwrap())),
                 summary,
             )
             .await?;
