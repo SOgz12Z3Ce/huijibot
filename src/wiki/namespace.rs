@@ -17,6 +17,15 @@ impl Namespace {
             Namespace::Data => Some("Data"),
         }
     }
+
+    pub(crate) fn suffix(&self) -> Option<&'static str> {
+        match self {
+            Namespace::Main => None,
+            Namespace::Template => None,
+            Namespace::Module => None,
+            Namespace::Data => Some(".json"),
+        }
+    }
 }
 
 impl FromStr for Namespace {

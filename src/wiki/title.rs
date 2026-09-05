@@ -36,6 +36,10 @@ impl Display for Title {
         if let Some(prefix) = self.namespace.prefix() {
             write!(f, "{prefix}:")?;
         }
-        write!(f, "{}", self.name)
+        write!(f, "{}", self.name)?;
+        if let Some(suffix) = self.namespace.suffix() {
+            write!(f, "{suffix}")?;
+        }
+        Ok(())
     }
 }
