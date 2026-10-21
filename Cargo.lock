@@ -545,6 +545,7 @@ dependencies = [
  "clap",
  "futures",
  "pathdiff",
+ "percent-encoding",
  "reqwest",
  "serde",
  "tokio",

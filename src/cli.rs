@@ -40,6 +40,15 @@ enum Commands {
         #[arg(short, long, default_value = "")]
         summary: String,
     },
+    Fetch {
+        titles: Vec<String>,
+
+        #[arg(short, long, default_value_t = 1)]
+        worker: usize,
+
+        #[arg(short, long, default_value_t = 5)]
+        duration: usize,
+    },
 }
 
 pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
@@ -69,6 +78,19 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
                 summary,
             )
             .await?;
+        }
+        Commands::Fetch {
+            titles,
+            worker,
+            duration,
+        } => {
+            subcommand::fetch(
+                dry,
+                titles,
+                worker,
+                Duration::from_secs(duration.try_into()?),
+            )
+            .await?
         }
     }
     if dry {

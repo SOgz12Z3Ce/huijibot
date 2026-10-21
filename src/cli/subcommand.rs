@@ -8,8 +8,15 @@ use crate::{
     wiki_client::WikiClient,
 };
 use futures::future;
+use percent_encoding::utf8_percent_encode;
 use reqwest::cookie::Jar;
-use std::{fs, path::PathBuf, sync::Arc, time::Duration};
+use std::io::Write;
+use std::{
+    fs::{self, File},
+    path::PathBuf,
+    sync::Arc,
+    time::Duration,
+};
 use tokio::time;
 use walkdir::{DirEntry, WalkDir};
 
@@ -159,4 +166,74 @@ async fn edit(wiki_client: WikiClient, title: Title, text: String, summary: Stri
             .build(),
     )
     .await;
+}
+
+pub(crate) async fn fetch(
+    dry: bool,
+    titles: Vec<String>,
+    worker: usize,
+    duration: Duration,
+) -> Result<(), std::io::Error> {
+    let config = metadata::config();
+    let jar = Arc::new(Jar::default());
+    let wiki_client = WikiClient::new(
+        Arc::clone(&jar),
+        config.site.unwrap(),
+        &config.auth_key.unwrap(),
+    );
+
+    println!(
+        "Logging in {}.huijiwiki.com with account:",
+        wiki_client.site()
+    );
+    println!("Username: {}", config.username.as_ref().unwrap());
+    println!("Password: [hidden]");
+    if !dry {
+        let login_token = action::get_login_token(&wiki_client).await;
+        action::login(
+            &wiki_client,
+            LoginParams::builder()
+                .login_token(login_token)
+                .username(config.username.unwrap())
+                .password(config.password.unwrap())
+                .build(),
+        )
+        .await;
+    }
+
+    for page in titles.iter() {
+        println!("{}", page);
+    }
+
+    for (i, chuck) in titles.chunks(worker).enumerate() {
+        if i != 0 {
+            println!("Wait for {}s now...", duration.as_secs());
+            if !dry {
+                time::sleep(duration).await;
+            }
+        }
+
+        println!("fetch: {chuck:?}");
+        let tasks = chuck.iter().map(|page| {
+            let wiki_client = wiki_client.clone();
+            async move {
+                let client = wiki_client.client();
+                let site = wiki_client.site();
+                let url = format!("https://{site}.huijiwiki.com/index.php?title={page}&action=raw");
+                let response = client.get(url).send().await.unwrap(); //.text().await.unwrap();
+                println!("{response:?}");
+                let response = response.text().await.unwrap();
+                println!("{response:?}");
+
+                let filename = utf8_percent_encode(page, percent_encoding::NON_ALPHANUMERIC);
+                println!("filename: {filename}");
+                let mut output = File::create(filename.to_string())?;
+                write!(output, "{}", response)
+
+                // println!("{response:?}");
+            }
+        });
+        future::join_all(tasks).await;
+    }
+    Ok(())
 }
